@@ -21,13 +21,13 @@ public class StorageRecommender {
 				if(table.isAggregationRequired()){
 					new Recommendation(tableName, "Bigquery");
 				}else {
-					new Recommendation(tableName, "Datastore");
+					if(table.isHighIoRequired()&&table.getTableLinkCounts()<2){
+						new Recommendation(tableName, "Bigtable");
+					}else {
+						new Recommendation(tableName, "Datastore");
+					}
 				}
-				if(table.isHighIoRequired()&&table.getTableLinkCounts()<2){
-					new Recommendation(tableName, "Bigtable");
-				}else {
-					new Recommendation(tableName, "Datastore");
-				}
+				
 			}
 		}
 		return results;
