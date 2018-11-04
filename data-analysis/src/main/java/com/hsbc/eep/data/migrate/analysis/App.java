@@ -3,7 +3,13 @@ package com.hsbc.eep.data.migrate.analysis;
 import java.io.File;
 import java.util.List;
 
+import org.apache.commons.lang3.text.translate.AggregateTranslator;
+
 import com.hsbc.eep.data.migrate.analysis.analyzer.OracleAnalyzer;
+import com.hsbc.eep.data.migrate.analysis.collector.AggregationCollector;
+import com.hsbc.eep.data.migrate.analysis.collector.HighIoCollector;
+import com.hsbc.eep.data.migrate.analysis.collector.TableLinkCollector;
+import com.hsbc.eep.data.migrate.analysis.collector.TransactionCollector;
 import com.hsbc.eep.data.migrate.analysis.dependency.ConstraintDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
@@ -39,9 +45,13 @@ public class App {
 		    List<StaticDependency>staticDep = analyzer.getStaticDependencies();
 		    List<ConstraintDependency>constraintDep = analyzer.getConstraintDependencies();
 		    List<ReadWriteFeature> rwFeatures = analyzer.getReadWriteFeature();
-		    List<GroupByFeature> gbFeatures = analyzer.getGroupByFeature();
-		    new GraphGenerator().generateDependencyGraph(allTables,dynamicDep, staticDep, constraintDep,rwFeatures,gbFeatures);
-		    List<Recommendation> recommends = new StorageRecommender().recommand(allTables,dynamicDep,staticDep,constraintDep,rwFeatures,gbFeatures);
+		    List<GroupByFeature> aggregationFeatures = analyzer.getAggregationFeature();
+		    new GraphGenerator().generateDependencyGraph(allTables,dynamicDep, staticDep, constraintDep,rwFeatures,aggregationFeatures);
+		    new TableLinkCollector().collect(allTables,dynamicDep, staticDep, constraintDep);
+		    new TransactionCollector();
+		    new AggregationCollector();
+		    new HighIoCollector();
+		    List<Recommendation> recommends = new StorageRecommender().recommand(allTables);
 	   }
 
 

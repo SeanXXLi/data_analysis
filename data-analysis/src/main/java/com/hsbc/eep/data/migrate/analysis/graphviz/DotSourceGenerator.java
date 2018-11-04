@@ -136,7 +136,7 @@ public class DotSourceGenerator {
 			color = "gold1";
 			break;
 		case 3:
-			color = "firebrick3";
+			color = "orangered";
 			break;
 		default:
 			color = "gray68";

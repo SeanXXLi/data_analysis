@@ -42,7 +42,7 @@ public class OracleAnalyzer {
 		return results;
 	}
 
-	public List<GroupByFeature> getGroupByFeature() {
+	public List<GroupByFeature> getAggregationFeature() {
 		List<GroupByFeature> results = new ArrayList<>();
 		return results;
 	}
