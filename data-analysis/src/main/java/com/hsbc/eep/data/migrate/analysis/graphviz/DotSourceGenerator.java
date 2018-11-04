@@ -108,25 +108,7 @@ public class DotSourceGenerator {
 		for (Entry tableLink : tableLinks.entrySet()) {
 
 			Integer count = (Integer) tableLink.getValue();
-			String color;
-
-			switch (count) {
-			case 0:
-				color = "chartreuse";
-				break;
-			case 1:
-				color = "cornflowerblue";
-				break;
-			case 2:
-				color = "gold1";
-				break;
-			case 3:
-				color = "firebrick3";
-				break;
-			default:
-				color = "gray68";
-				break;
-			}
+			String color = determineColor(count);
 			Integer side = count + 3;
 			Integer peripheries = count + 1;
 			results.add(tableLink.getKey() + " [orientation = 15, regular = true, shape = polygon, sides = " + side
@@ -139,5 +121,27 @@ public class DotSourceGenerator {
 					+ " [orientation = 15, regular = true, shape = polygon, sides = 3, peripheries = 1, color = chartreuse, style = filled];");
 		}
 		return results;
+	}
+
+	public String determineColor(Integer linkCount) {
+		String color;
+		switch (linkCount) {
+		case 0:
+			color = "chartreuse";
+			break;
+		case 1:
+			color = "cornflowerblue";
+			break;
+		case 2:
+			color = "gold1";
+			break;
+		case 3:
+			color = "firebrick3";
+			break;
+		default:
+			color = "gray68";
+			break;
+		}
+		return color;
 	}
 }
