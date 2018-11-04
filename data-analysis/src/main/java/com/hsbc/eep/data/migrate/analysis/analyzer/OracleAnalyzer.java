@@ -8,6 +8,7 @@ import com.hsbc.eep.data.migrate.analysis.dependency.ConstraintDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.ReadWriteFeature;
 import com.hsbc.eep.data.migrate.analysis.table.Table;
 
@@ -45,6 +46,11 @@ public class OracleAnalyzer {
 	public List<GroupByFeature> getAggregationFeature() {
 		List<GroupByFeature> results = new ArrayList<>();
 		return results;
+	}
+
+	public List<HighIoFeature> getHighIoFeature() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
