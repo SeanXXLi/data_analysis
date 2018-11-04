@@ -12,10 +12,10 @@ public class StorageRecommender {
 		for (Table table : allTables) {
 			String tableName = table.getName();
 			if (table.isTrasactionRequired()) {
-				if(table.isHighIoRequired()){
-					new Recommendation(tableName, "CloudSQL");
-				}else {
+				if(table.isHighIoRequired()&&table.getTableLinkCounts()<5){
 					new Recommendation(tableName, "Spanner");
+				}else {
+					new Recommendation(tableName, "CloudSQL");
 				}
 			}else {
 				if(table.isAggregationRequired()){
@@ -23,7 +23,7 @@ public class StorageRecommender {
 				}else {
 					new Recommendation(tableName, "Datastore");
 				}
-				if(table.isHighIoRequired()){
+				if(table.isHighIoRequired()&&table.getTableLinkCounts()<2){
 					new Recommendation(tableName, "Bigtable");
 				}else {
 					new Recommendation(tableName, "Datastore");
