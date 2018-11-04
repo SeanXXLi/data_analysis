@@ -24,7 +24,7 @@ public class App {
 	   {
 		 App p = new App();
 	      p.start();
-	      p.start2();
+//	      p.start2();
 	   }
 
 	/**

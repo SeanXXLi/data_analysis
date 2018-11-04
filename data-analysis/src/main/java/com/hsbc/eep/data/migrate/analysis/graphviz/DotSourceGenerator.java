@@ -1,6 +1,7 @@
 package com.hsbc.eep.data.migrate.analysis.graphviz;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.hsbc.eep.data.migrate.analysis.dependency.ConstraintDependency;
@@ -86,18 +88,18 @@ public class DotSourceGenerator {
 	public List<String> generateTableDiscription(List<Table> allTables, List<DynamicDependency> dynamicDep,
 			List<StaticDependency> staticDep, List<ConstraintDependency> constraintDep) {
 		List<String> results = new ArrayList<>();
-		Map<String,Integer>count = new HashMap<>();
+		Map<String,Integer>tableLinks = new HashMap<>();
 		dynamicDep.parallelStream().map(DynamicDependency::getRelatedTables)
 		.forEach(
 				tables -> tables.parallelStream()
 				.map(Table::getName)
 				.forEach(name -> {	
-					Integer current = count.get(name);
+					Integer current = tableLinks.get(name);
 									if (current==null) {										
-										count.put(name, 1);
+										tableLinks.put(name, 1);
 									}else {
 										current+=1;
-										count.put(name, current);
+										tableLinks.put(name, current);
 									}
 									})
 				)
@@ -108,19 +110,49 @@ public class DotSourceGenerator {
 				tables -> tables.parallelStream()
 				.map(Table::getName)
 				.forEach(name -> {	
-					Integer current = count.get(name);
+					Integer current = tableLinks.get(name);
 									if (current==null) {										
-										count.put(name, 1);
+										tableLinks.put(name, 1);
 									}else {
 										current+=1;
-										count.put(name, current);
+										tableLinks.put(name, current);
 									}
 									})
 				)
 		;
 		
-		for (Entry tableLink : count.entrySet()) {
-			results.add(tableLink.getKey()+" [orientation = 15, regular = true, shape = polygon, sides = 8, peripheries = "+tableLink.getValue()+", color = red, style = filled];");
+		for (Entry tableLink : tableLinks.entrySet()) {
+			
+			Integer count = (Integer) tableLink.getValue();
+			String color;
+			
+			switch (count) {
+			case 0:
+				color = "chartreuse";
+				break;
+			case 1:
+				color = "cornflowerblue";
+				break;
+			case 2:
+				color = "gold1";
+				break;
+			case 3:
+				color = "firebrick3";
+				break;
+			default:
+				color = "gray68";
+				break;
+			}
+			Integer side = count+3;
+			Integer peripheries = count+1;
+			results.add(tableLink.getKey()+" [orientation = 15, regular = true, shape = polygon, sides = "+side+", peripheries = "+peripheries+", color = "+color+", style = filled];");
+		}
+		List<String> allTableNames = allTables.stream()
+        .map(Table::getName)
+        .collect(Collectors.toList());
+		Collection<String> IsolateTables = CollectionUtils.disjunction(allTableNames, tableLinks.keySet());
+		for (String IsolateTable : IsolateTables) {
+			results.add(IsolateTable+" [orientation = 15, regular = true, shape = polygon, sides = 3, peripheries = 1, color = chartreuse, style = filled];");
 		}
 		return results;
 	}
