@@ -21,9 +21,9 @@ public class DotSourceGenerator {
 		for (DynamicDependency dynamicDependency : dynamicDep) {
 			List<Table> relatedTables = dynamicDependency.getRelatedTables();
 			String linkage = relatedTables.parallelStream().map(Table::getName).collect(Collectors.joining("->"));
-			linkage = linkage.concat("[dir=\"none\",style=dotted,label=\"");
+			linkage = linkage.concat("[dir=\"none\",style=dotted,color=blue,label=\"");
 			linkage = linkage.concat(dynamicDependency.getOperation());
-			linkage = linkage.concat("\"]");
+			linkage = linkage.concat("\",fontcolor = blue]");
 			linkage = linkage.concat(";");
 			results.add(linkage);
 		}
@@ -35,19 +35,27 @@ public class DotSourceGenerator {
 		for (StaticDependency staticDependency : staticDep) {
 			List<Table> relatedTables = staticDependency.getRelatedTables();
 			String linkage = relatedTables.parallelStream().map(Table::getName).collect(Collectors.joining("->"));
-			linkage = linkage.concat("[dir=\"none\",style=bold,label=\"");
+			linkage = linkage.concat("[dir=\"none\",style=bold,color=red,label=\"");
 			linkage = linkage.concat(staticDependency.getReference());
-			linkage = linkage.concat("\"]");
+			linkage = linkage.concat("\",fontcolor = red]");
 			linkage = linkage.concat(";");
 			results.add(linkage);
 		}
 		return results;
 	}
 
-	public List<String> generateConstrantDotSource(List<ConstraintDependency> constraintDep) {
-		List<String> content = new ArrayList<>();
-		content.add("");
-		return content;
+	public List<String> generateConstrantDotSource(List<ConstraintDependency> constraintDeps) {
+		List<String> results = new ArrayList<>();
+		for (ConstraintDependency constraintDep : constraintDeps) {
+			List<Table> relatedTables = constraintDep.getRelatedTables();
+			String linkage = relatedTables.parallelStream().map(Table::getName).collect(Collectors.joining("->"));
+			linkage = linkage.concat("[dir=\"none\",style=dashed,color=green,label=\"");
+			linkage = linkage.concat(constraintDep.getConstraint());
+			linkage = linkage.concat("\",fontcolor = green]");
+			linkage = linkage.concat(";");
+			results.add(linkage);
+		}
+		return results;
 	}
 
 	@SafeVarargs
@@ -83,7 +91,8 @@ public class DotSourceGenerator {
 			List<StaticDependency> staticDep, List<ConstraintDependency> constraintDep) {
 		List<String> results = new ArrayList<>();
 		Map<String, Integer> tableLinks = new HashMap<>();
-		dynamicDep.parallelStream().map(DynamicDependency::getRelatedTables)
+		results.add("edge [decorate = true];");
+		dynamicDep.stream().map(DynamicDependency::getRelatedTables)
 				.forEach(tables -> tables.parallelStream().map(Table::getName).forEach(name -> {
 					Integer current = tableLinks.get(name);
 					if (current == null) {
@@ -94,7 +103,7 @@ public class DotSourceGenerator {
 					}
 				}));
 
-		staticDep.parallelStream().map(StaticDependency::getRelatedTables)
+		staticDep.stream().map(StaticDependency::getRelatedTables)
 				.forEach(tables -> tables.parallelStream().map(Table::getName).forEach(name -> {
 					Integer current = tableLinks.get(name);
 					if (current == null) {
@@ -104,6 +113,17 @@ public class DotSourceGenerator {
 						tableLinks.put(name, current);
 					}
 				}));
+		
+		constraintDep.stream().map(ConstraintDependency::getRelatedTables)
+		.forEach(tables -> tables.parallelStream().map(Table::getName).forEach(name -> {
+			Integer current = tableLinks.get(name);
+			if (current == null) {
+				tableLinks.put(name, 1);
+			} else {
+				current += 1;
+				tableLinks.put(name, current);
+			}
+		}));
 
 		for (Entry tableLink : tableLinks.entrySet()) {
 

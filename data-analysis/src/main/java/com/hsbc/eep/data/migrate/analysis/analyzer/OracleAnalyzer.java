@@ -29,12 +29,13 @@ public class OracleAnalyzer {
 
 	public List<ConstraintDependency> getConstraintDependencies() {
 		List<ConstraintDependency> results = new ArrayList<>();
+		results.add(new ConstraintDependency(Arrays.asList(new Table("C"),new Table("E")),"X_FK"));
 		return results;
 	}
 
 	public List<Table> getAllTables() {
 		List<Table> results = new ArrayList<>();
-		results.addAll(Arrays.asList(new Table("A"),new Table("B"),new Table("C"),new Table("D")));
+		results.addAll(Arrays.asList(new Table("A"),new Table("B"),new Table("C"),new Table("D"),new Table("E")));
 		return results;
 	}
 
