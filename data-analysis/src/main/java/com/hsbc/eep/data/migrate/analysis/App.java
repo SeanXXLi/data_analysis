@@ -3,7 +3,8 @@ package com.hsbc.eep.data.migrate.analysis;
 import java.io.File;
 import java.util.List;
 
-import org.apache.commons.lang3.text.translate.AggregateTranslator;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.hsbc.eep.data.migrate.analysis.analyzer.OracleAnalyzer;
 import com.hsbc.eep.data.migrate.analysis.collector.AggregationCollector;
@@ -26,11 +27,14 @@ import com.hsbc.eep.data.migrate.analysis.table.Table;
  * Hello world!
  *
  */
+
+@SpringBootApplication
 public class App {
 	 public static void main(String[] args)
 	   {
-		 App p = new App();
-	      p.start();
+		 SpringApplication.run(App.class, args);
+//		 App p = new App();
+//	      p.start();
 //	      p.start2();
 	   }
 
