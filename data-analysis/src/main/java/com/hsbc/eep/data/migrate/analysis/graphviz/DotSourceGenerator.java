@@ -21,9 +21,10 @@ public class DotSourceGenerator {
 		for (DynamicDependency dynamicDependency : dynamicDep) {
 			List<Table> relatedTables = dynamicDependency.getRelatedTables();
 			String linkage = relatedTables.parallelStream().map(Table::getName).collect(Collectors.joining("->"));
-			linkage = linkage.concat("[dir=\"none\",style=dotted,color=blue,label=\"");
+			linkage = linkage.concat("[dir=\"none\",style=dashed,color=green,label=\"");
+			
 			linkage = linkage.concat(dynamicDependency.getOperation());
-			linkage = linkage.concat("\",fontcolor = blue]");
+			linkage = linkage.concat("\",fontcolor = green]");
 			linkage = linkage.concat(";");
 			results.add(linkage);
 		}
@@ -49,9 +50,9 @@ public class DotSourceGenerator {
 		for (ConstraintDependency constraintDep : constraintDeps) {
 			List<Table> relatedTables = constraintDep.getRelatedTables();
 			String linkage = relatedTables.parallelStream().map(Table::getName).collect(Collectors.joining("->"));
-			linkage = linkage.concat("[dir=\"none\",style=dashed,color=green,label=\"");
+			linkage = linkage.concat("[dir=\"none\",style=dotted,color=blue,label=\"");
 			linkage = linkage.concat(constraintDep.getConstraint());
-			linkage = linkage.concat("\",fontcolor = green]");
+			linkage = linkage.concat("\",fontcolor = blue]");
 			linkage = linkage.concat(";");
 			results.add(linkage);
 		}
@@ -62,6 +63,7 @@ public class DotSourceGenerator {
 	public final List<String> mergeContentList(List<String>... graphContents) {
 		List<String> content = new ArrayList<>();
 		content.add(startGraph());
+//		content.add("edge [decorate = true];");
 		for (List<String> eachContent : graphContents) {
 			content.addAll(eachContent);
 		}
@@ -91,7 +93,7 @@ public class DotSourceGenerator {
 			List<StaticDependency> staticDep, List<ConstraintDependency> constraintDep) {
 		List<String> results = new ArrayList<>();
 		Map<String, Integer> tableLinks = new HashMap<>();
-		results.add("edge [decorate = true];");
+		
 		dynamicDep.stream().map(DynamicDependency::getRelatedTables)
 				.forEach(tables -> tables.parallelStream().map(Table::getName).forEach(name -> {
 					Integer current = tableLinks.get(name);
