@@ -7,18 +7,19 @@ import com.hsbc.eep.data.migrate.analysis.dependency.ConstraintDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
-import com.hsbc.eep.data.migrate.analysis.feature.ReadWriteFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
 import com.hsbc.eep.data.migrate.analysis.table.Table;
 
 public class GraphGenerator {
 	public void generateDependencyGraph(List<Table> allTables, List<DynamicDependency> dynamicDep, List<StaticDependency> staticDep,
-			List<ConstraintDependency> constraintDep, List<ReadWriteFeature> rwFeatures, List<GroupByFeature> gbFeatures) {
+			List<ConstraintDependency> constraintDep, List<HighReadWriteRatioFeature> rwFeatures, List<GroupByFeature> gbFeatures, List<HighIoFeature> highIoFeatures) {
 		GraphViz gv = new GraphViz();
 		DotSourceGenerator generator = new DotSourceGenerator();
 		List<String> dynamicContent = generator.generateDynamicDotSource(dynamicDep);
 		List<String> staticContent = generator.generateStaticDotSource(staticDep);
 		List<String> constraintContent = generator.generateConstrantDotSource(constraintDep);
-		List<String> tableDis = generator.generateTableDiscription(allTables,dynamicDep,staticDep,constraintDep);
+		List<String> tableDis = generator.generateTableDiscription(allTables,dynamicDep,staticDep,constraintDep,rwFeatures,gbFeatures,highIoFeatures);
 		List<String> content = generator.mergeContentList(dynamicContent, staticContent, constraintContent,tableDis);
 		for (String line : content ) {
 			  gv.addln(line);

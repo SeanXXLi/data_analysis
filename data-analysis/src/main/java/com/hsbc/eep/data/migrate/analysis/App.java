@@ -15,7 +15,7 @@ import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
-import com.hsbc.eep.data.migrate.analysis.feature.ReadWriteFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
 import com.hsbc.eep.data.migrate.analysis.graphviz.GraphGenerator;
 import com.hsbc.eep.data.migrate.analysis.graphviz.GraphViz;
 import com.hsbc.eep.data.migrate.analysis.recommend.Recommendation;
@@ -45,11 +45,11 @@ public class App {
 		    List<DynamicDependency>dynamicDep = analyzer.getDynamicDependencies();
 		    List<StaticDependency>staticDep = analyzer.getStaticDependencies();
 		    List<ConstraintDependency>constraintDep = analyzer.getConstraintDependencies();
-		    List<ReadWriteFeature> rwFeatures = analyzer.getReadWriteFeature();
+		    List<HighReadWriteRatioFeature> rwFeatures = analyzer.getReadWriteFeature();
 		    List<GroupByFeature> aggregationFeatures = analyzer.getAggregationFeature();
 		    List<HighIoFeature> highIoFeatures = analyzer.getHighIoFeature();
 		    
-		    new GraphGenerator().generateDependencyGraph(allTables,dynamicDep, staticDep, constraintDep,rwFeatures,aggregationFeatures);
+		    new GraphGenerator().generateDependencyGraph(allTables,dynamicDep, staticDep, constraintDep,rwFeatures,aggregationFeatures,highIoFeatures);
 		    
 		    new TableLinkCollector().collect(allTables,dynamicDep, staticDep, constraintDep);
 		    new TransactionCollector().collect(rwFeatures);

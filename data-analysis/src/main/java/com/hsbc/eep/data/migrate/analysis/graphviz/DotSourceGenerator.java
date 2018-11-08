@@ -13,6 +13,9 @@ import org.apache.commons.collections.CollectionUtils;
 import com.hsbc.eep.data.migrate.analysis.dependency.ConstraintDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
+import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
 import com.hsbc.eep.data.migrate.analysis.table.Table;
 
 public class DotSourceGenerator {
@@ -90,7 +93,7 @@ public class DotSourceGenerator {
 	}
 
 	public List<String> generateTableDiscription(List<Table> allTables, List<DynamicDependency> dynamicDep,
-			List<StaticDependency> staticDep, List<ConstraintDependency> constraintDep) {
+			List<StaticDependency> staticDep, List<ConstraintDependency> constraintDep, List<HighReadWriteRatioFeature> rwFeatures, List<GroupByFeature> gbFeatures, List<HighIoFeature> highIoFeatures) {
 		List<String> results = new ArrayList<>();
 		Map<String, Integer> tableLinks = new HashMap<>();
 		
@@ -117,7 +120,7 @@ public class DotSourceGenerator {
 				}));
 		
 		constraintDep.stream().map(ConstraintDependency::getRelatedTables)
-		.forEach(tables -> tables.parallelStream().map(Table::getName).forEach(name -> {
+		.forEach(tables -> tables.stream().map(Table::getName).forEach(name -> {
 			Integer current = tableLinks.get(name);
 			if (current == null) {
 				tableLinks.put(name, 1);
@@ -133,17 +136,32 @@ public class DotSourceGenerator {
 			String color = determineColor(count);
 			Integer side = count + 3;
 			Integer peripheries = count + 1;
-			results.add(tableLink.getKey() + " [orientation = 15, regular = true, shape = polygon, sides = " + side
-					+ ", peripheries = " + peripheries + ", color = " + color + ", style = filled];");
+			results.add(tableLink.getKey() + " [orientation = 15, regular = true, shape = polygon, peripheries = 2, sides = 4, color = " + color + ", style = filled];");
 		}
+		
 		List<String> allTableNames = allTables.stream().map(Table::getName).collect(Collectors.toList());
 		Collection<String> IsolateTables = CollectionUtils.disjunction(allTableNames, tableLinks.keySet());
+		
 		for (String IsolateTable : IsolateTables) {
 			results.add(IsolateTable
-					+ " [orientation = 15, regular = true, shape = polygon, sides = 3, peripheries = 1, color = chartreuse, style = filled];");
+					+ " [orientation = 15, regular = true, shape = polygon, sides = 4, peripheries = 2, color = chartreuse, style = filled];");
+		}
+		for (GroupByFeature groupByFeature : gbFeatures) {
+			Integer side = 5;
+			results.add(groupByFeature.getTable() + " [ sides = " + side + "];");
+		}
+
+		for (HighIoFeature highIoFeature : highIoFeatures) {
+			Integer peripheries = 3;
+			results.add(highIoFeature.getTable() + " [ peripheries = " + peripheries + "];");
+		}
+		for (HighReadWriteRatioFeature readWriteFeature : rwFeatures) {
+			Integer peripheries = 2;
+			results.add(readWriteFeature.getTable() + " [ style = \"\"];");
 		}
 		return results;
 	}
+	
 
 	public String determineColor(Integer linkCount) {
 		String color;

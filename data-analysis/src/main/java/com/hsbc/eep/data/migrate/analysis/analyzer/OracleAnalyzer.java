@@ -9,7 +9,7 @@ import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
-import com.hsbc.eep.data.migrate.analysis.feature.ReadWriteFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
 import com.hsbc.eep.data.migrate.analysis.table.Table;
 
 public class OracleAnalyzer {
@@ -39,19 +39,22 @@ public class OracleAnalyzer {
 		return results;
 	}
 
-	public List<ReadWriteFeature> getReadWriteFeature() {
-		List<ReadWriteFeature> results = new ArrayList<>();
+	public List<HighReadWriteRatioFeature> getReadWriteFeature() {
+		List<HighReadWriteRatioFeature> results = new ArrayList<>();
+		results.addAll(Arrays.asList(new HighReadWriteRatioFeature("C",true)));
 		return results;
 	}
 
 	public List<GroupByFeature> getAggregationFeature() {
 		List<GroupByFeature> results = new ArrayList<>();
+		results.addAll(Arrays.asList(new GroupByFeature("A",true),new GroupByFeature("B",true)));
 		return results;
 	}
 
 	public List<HighIoFeature> getHighIoFeature() {
-		// TODO Auto-generated method stub
-		return null;
+		List<HighIoFeature> results = new ArrayList<>();
+		results.addAll(Arrays.asList(new HighIoFeature("D",true),new HighIoFeature("E",true)));
+		return results;
 	}
 
 
