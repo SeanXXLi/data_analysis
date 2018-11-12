@@ -1,59 +1,88 @@
 package com.hsbc.eep.data.migrate.analysis.analyzer;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
 import com.hsbc.eep.data.migrate.analysis.dependency.ConstraintDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
+import com.hsbc.eep.data.migrate.analysis.domian.Employee;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
 import com.hsbc.eep.data.migrate.analysis.table.Table;
 
+@Service
 public class OracleAnalyzer {
-
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
 	public List<DynamicDependency> getDynamicDependencies() {
 		List<DynamicDependency> results = new ArrayList<>();
-		results.add(new DynamicDependency(Arrays.asList(new Table("A"),new Table("B")),"SELECT","12354"));
+//		results.add(new DynamicDependency(Arrays.asList(new Table("A"),new Table("B")),"SELECT","12354"));
 		return results;
 	}
 
 	public List<StaticDependency> getStaticDependencies() {
 		List<StaticDependency> results = new ArrayList<>();
-		results.add(new StaticDependency(Arrays.asList(new Table("A"),new Table("C")),"X_PKG"));
+        String sql = "with s as ( select name,REFERENCED_NAME from dba_dependencies where owner = 'HR' and REFERENCED_OWNER = 'HR' and REFERENCED_TYPE = 'TABLE') select name,listagg(REFERENCED_NAME,',') within group (order by REFERENCED_NAME) as all_tables from s group by name";
+        List<Table> alltables = jdbcTemplate.query(sql, new RowMapper(){
+ 
+            public StaticDependency mapRow(ResultSet rs, int rowNum) throws SQLException {
+            	StaticDependency table = new StaticDependency(Arrays.asList(new Table(rs.getString("TABLE_NAME")),new Table(rs.getString("TABLE_NAME"))),rs.getString("TABLE_NAME"));
+                return table;
+            }
+ 
+        });
+//		results.add(new StaticDependency(Arrays.asList(new Table("A"),new Table("C")),"X_PKG"));
 		return results;
 	}
 
 	public List<ConstraintDependency> getConstraintDependencies() {
 		List<ConstraintDependency> results = new ArrayList<>();
-		results.add(new ConstraintDependency(Arrays.asList(new Table("C"),new Table("E")),"X_FK"));
+//		results.add(new ConstraintDependency(Arrays.asList(new Table("C"),new Table("E")),"X_FK"));
 		return results;
 	}
 
 	public List<Table> getAllTables() {
 		List<Table> results = new ArrayList<>();
-		results.addAll(Arrays.asList(new Table("A"),new Table("B"),new Table("C"),new Table("D"),new Table("E")));
+        String sql = "select table_name from all_tables where owner = 'HR'";
+        List<Table> alltables = jdbcTemplate.query(sql, new RowMapper(){
+ 
+            public Table mapRow(ResultSet rs, int rowNum) throws SQLException {
+            	Table table = new Table(rs.getString("TABLE_NAME"));
+                return table;
+            }
+ 
+        });
+        results.addAll(alltables);
+//		results.addAll(Arrays.asList(new Table("A"),new Table("B"),new Table("C"),new Table("D"),new Table("E"),new Table("G")));
 		return results;
 	}
 
 	public List<HighReadWriteRatioFeature> getReadWriteFeature() {
 		List<HighReadWriteRatioFeature> results = new ArrayList<>();
-		results.addAll(Arrays.asList(new HighReadWriteRatioFeature("C",true)));
+//		results.addAll(Arrays.asList(new HighReadWriteRatioFeature("C",true)));
 		return results;
 	}
 
 	public List<GroupByFeature> getAggregationFeature() {
 		List<GroupByFeature> results = new ArrayList<>();
-		results.addAll(Arrays.asList(new GroupByFeature("A",true),new GroupByFeature("B",true)));
+//		results.addAll(Arrays.asList(new GroupByFeature("A",true),new GroupByFeature("B",true)));
 		return results;
 	}
 
 	public List<HighIoFeature> getHighIoFeature() {
 		List<HighIoFeature> results = new ArrayList<>();
-		results.addAll(Arrays.asList(new HighIoFeature("D",true),new HighIoFeature("E",true)));
+//		results.addAll(Arrays.asList(new HighIoFeature("D",true),new HighIoFeature("E",true)));
 		return results;
 	}
 

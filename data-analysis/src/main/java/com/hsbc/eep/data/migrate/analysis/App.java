@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.List;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 import com.hsbc.eep.data.migrate.analysis.analyzer.OracleAnalyzer;
 import com.hsbc.eep.data.migrate.analysis.collector.AggregationCollector;
@@ -28,8 +28,9 @@ import com.hsbc.eep.data.migrate.analysis.table.Table;
  * Hello world!
  *
  */
-@EnableEurekaServer
+//@EnableEurekaServer
 @SpringBootApplication
+@EnableAutoConfiguration
 public class App {
 	 public static void main(String[] args)
 	   {

@@ -34,7 +34,7 @@ public class GraphGenerator {
 //	      String type = "svg";    // open with inkscape
 //	      String type = "png";
 //	      String type = "plain";
-		  File out = new File("D:\\graph\\out." + type);   // Linux
+		  File out = new File("D:\\graph\\images\\out." + type);   // Linux
 //	      File out = new File("c:/eclipse.ws/graphviz-java-api/out." + type);    // Windows
 		  gv.writeGraphToFile( gv.getGraph( gv.getDotSource(), type ), out );
 	}

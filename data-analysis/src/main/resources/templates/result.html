@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>DB Connection</title>
+	<meta name="viewport" content="width=device-width">
+	<script src="webjars/jquery/1.11.1/jquery.min.js"></script>
+	<script src="webjars/bootstrap/3.3.7-1/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="webjars/bootstrap/3.3.7-1/css/bootstrap.css">
+	<link th:href="@{connection.css}" rel="stylesheet" type="text/css">
+</head>
+<body class="text-center">
+<form class="from-db" th:action="@{/connect}" th:object="${conn}" method="post">
+ <img class="main-image" src="/images/out.gif" alt="">
+ <button class="btn btn-lg btn-primary btn-block" type="submit">Recommend</button>
+</form>
+<script th:inline="javascript">
+	$(function(){
+		$(":radio").click(function(){
+			var choose = $(this).val();
+			if(choose == 'optionSID'){
+				$('#optionSID').attr("disable",false);
+				$('#optionService').attr("disable",true);
+				$('#optionService').val("");
+			}else{
+				$('#optionSID').attr("disable",true);
+				$('#optionService').attr("disable",false);
+				$('#optionSID').val("");
+			}
+		});
+	})
+</script>
+</body>
+
+</html>
