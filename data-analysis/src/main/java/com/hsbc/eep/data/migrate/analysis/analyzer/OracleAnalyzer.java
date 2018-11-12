@@ -34,14 +34,27 @@ public class OracleAnalyzer {
 	public List<StaticDependency> getStaticDependencies() {
 		List<StaticDependency> results = new ArrayList<>();
         String sql = "with s as ( select name,REFERENCED_NAME from dba_dependencies where owner = 'HR' and REFERENCED_OWNER = 'HR' and REFERENCED_TYPE = 'TABLE') select name,listagg(REFERENCED_NAME,',') within group (order by REFERENCED_NAME) as all_tables from s group by name";
-        List<Table> alltables = jdbcTemplate.query(sql, new RowMapper(){
+        List<StaticDependency> staticDeps = jdbcTemplate.query(sql, new RowMapper(){
  
             public StaticDependency mapRow(ResultSet rs, int rowNum) throws SQLException {
-            	StaticDependency table = new StaticDependency(Arrays.asList(new Table(rs.getString("TABLE_NAME")),new Table(rs.getString("TABLE_NAME"))),rs.getString("TABLE_NAME"));
-                return table;
+            	List<Table> tl = new ArrayList<>();
+            	String tables = rs.getString("all_tables");
+            	String[] split = tables.split(",");
+            	for (String table : split) {
+					Table t = new Table(table);
+					tl.add(t);
+				}
+            	StaticDependency sd = new StaticDependency(tl,rs.getString("NAME"));
+                return sd;
             }
  
         });
+        for (StaticDependency staticDependency : staticDeps) {
+        	if (staticDependency.getRelatedTables().size()>1) {		
+        		System.out.println(staticDeps);
+        		results.addAll(staticDeps);
+			}
+		}
 //		results.add(new StaticDependency(Arrays.asList(new Table("A"),new Table("C")),"X_PKG"));
 		return results;
 	}

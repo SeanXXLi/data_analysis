@@ -30,4 +30,11 @@ public class StaticDependency {
 		this.reference = reference;
 	}
 
+	@Override
+	public String toString() {
+		return "StaticDependency [relatedTables=" + relatedTables + ", reference=" + reference + "]";
+	}
+
+	
+	
 }
