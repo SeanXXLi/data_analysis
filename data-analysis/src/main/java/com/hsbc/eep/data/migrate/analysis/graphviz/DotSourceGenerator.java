@@ -15,7 +15,7 @@ import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
-import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.TransationRequiredFeature;
 import com.hsbc.eep.data.migrate.analysis.table.Table;
 
 public class DotSourceGenerator {
@@ -93,7 +93,7 @@ public class DotSourceGenerator {
 	}
 
 	public List<String> generateTableDiscription(List<Table> allTables, List<DynamicDependency> dynamicDep,
-			List<StaticDependency> staticDep, List<ConstraintDependency> constraintDep, List<HighReadWriteRatioFeature> rwFeatures, List<GroupByFeature> gbFeatures, List<HighIoFeature> highIoFeatures) {
+			List<StaticDependency> staticDep, List<ConstraintDependency> constraintDep, List<TransationRequiredFeature> rwFeatures, List<GroupByFeature> gbFeatures, List<HighIoFeature> highIoFeatures) {
 		List<String> results = new ArrayList<>();
 		Map<String, Integer> tableLinks = new HashMap<>();
 		
@@ -155,7 +155,7 @@ public class DotSourceGenerator {
 			Integer peripheries = 3;
 			results.add(highIoFeature.getTable() + " [ peripheries = " + peripheries + "];");
 		}
-		for (HighReadWriteRatioFeature readWriteFeature : rwFeatures) {
+		for (TransationRequiredFeature readWriteFeature : rwFeatures) {
 			Integer peripheries = 2;
 			results.add(readWriteFeature.getTable() + " [ style = \"\"];");
 		}
@@ -165,23 +165,17 @@ public class DotSourceGenerator {
 
 	public String determineColor(Integer linkCount) {
 		String color;
-		switch (linkCount) {
-		case 0:
+		if (linkCount<3) {
 			color = "chartreuse";
-			break;
-		case 1:
+		}else if (linkCount<6) {
 			color = "cornflowerblue";
-			break;
-		case 2:
+		}else if (linkCount<9) {
 			color = "gold1";
-			break;
-		case 3:
+		}else if (linkCount<12) {
 			color = "orangered";
-			break;
-		default:
+		}else {
 			color = "gray68";
-			break;
-		}
+		}			
 		return color;
 	}
 }

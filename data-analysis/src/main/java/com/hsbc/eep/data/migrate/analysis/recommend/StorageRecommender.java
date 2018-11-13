@@ -12,7 +12,7 @@ public class StorageRecommender {
 		for (Table table : allTables) {
 			String tableName = table.getName();
 			if (table.isTrasactionRequired()) {
-				if(table.isHighIoRequired()&&table.getTableLinkCounts()<5){
+				if(table.isHighIoRequired()&&table.getTableLinkCounts()<8){
 					results.add(new Recommendation(tableName, "Spanner"));
 				}else {
 					results.add(new Recommendation(tableName, "CloudSQL"));

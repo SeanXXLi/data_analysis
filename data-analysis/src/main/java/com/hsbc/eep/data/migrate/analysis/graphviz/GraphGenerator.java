@@ -8,12 +8,12 @@ import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
-import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.TransationRequiredFeature;
 import com.hsbc.eep.data.migrate.analysis.table.Table;
 
 public class GraphGenerator {
 	public void generateDependencyGraph(List<Table> allTables, List<DynamicDependency> dynamicDep, List<StaticDependency> staticDep,
-			List<ConstraintDependency> constraintDep, List<HighReadWriteRatioFeature> rwFeatures, List<GroupByFeature> gbFeatures, List<HighIoFeature> highIoFeatures) {
+			List<ConstraintDependency> constraintDep, List<TransationRequiredFeature> rwFeatures, List<GroupByFeature> gbFeatures, List<HighIoFeature> highIoFeatures) {
 		GraphViz gv = new GraphViz();
 		DotSourceGenerator generator = new DotSourceGenerator();
 		List<String> dynamicContent = generator.generateDynamicDotSource(dynamicDep);

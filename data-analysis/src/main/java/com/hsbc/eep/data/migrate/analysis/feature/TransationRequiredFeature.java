@@ -1,11 +1,11 @@
 package com.hsbc.eep.data.migrate.analysis.feature;
 
-public class HighReadWriteRatioFeature {
+public class TransationRequiredFeature {
 	private String table;
 	
 	private Boolean hasHighReadWriteRatio;
 	
-	public HighReadWriteRatioFeature(String table, Boolean hasHighReadWriteRatio) {
+	public TransationRequiredFeature(String table, Boolean hasHighReadWriteRatio) {
 		super();
 		this.table = table;
 		this.hasHighReadWriteRatio = hasHighReadWriteRatio;

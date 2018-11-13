@@ -24,7 +24,7 @@ import com.hsbc.eep.data.migrate.analysis.domian.DBConnection;
 import com.hsbc.eep.data.migrate.analysis.domian.Recommendations;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
-import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.TransationRequiredFeature;
 import com.hsbc.eep.data.migrate.analysis.graphviz.GraphGenerator;
 import com.hsbc.eep.data.migrate.analysis.recommend.Recommendation;
 import com.hsbc.eep.data.migrate.analysis.recommend.StorageRecommender;
@@ -58,16 +58,16 @@ public class WebController {
 	    List<DynamicDependency>dynamicDep = analyzer.getDynamicDependencies();
 	    List<StaticDependency>staticDep = analyzer.getStaticDependencies();
 	    List<ConstraintDependency>constraintDep = analyzer.getConstraintDependencies();
-	    List<HighReadWriteRatioFeature> rwFeatures = analyzer.getReadWriteFeature();
+	    List<TransationRequiredFeature> rwFeatures = analyzer.getTransationFeature();
 	    List<GroupByFeature> aggregationFeatures = analyzer.getAggregationFeature();
 	    List<HighIoFeature> highIoFeatures = analyzer.getHighIoFeature();
 	    
 	    new GraphGenerator().generateDependencyGraph(allTables,dynamicDep, staticDep, constraintDep,rwFeatures,aggregationFeatures,highIoFeatures);
 	    
 	    new TableLinkCollector().collect(allTables,dynamicDep, staticDep, constraintDep);
-	    new TransactionCollector().collect(rwFeatures);
-	    new AggregationCollector().collect(aggregationFeatures);
-	    new HighIoCollector().collect(highIoFeatures);
+	    new TransactionCollector().collect(allTables,rwFeatures);
+	    new AggregationCollector().collect(allTables,aggregationFeatures);
+	    new HighIoCollector().collect(allTables,highIoFeatures);
 	    
 	    recommendations = new StorageRecommender().recommand(allTables);
 	    

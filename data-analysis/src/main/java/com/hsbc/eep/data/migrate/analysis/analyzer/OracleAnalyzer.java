@@ -17,7 +17,7 @@ import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
 import com.hsbc.eep.data.migrate.analysis.domian.Employee;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
-import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
+import com.hsbc.eep.data.migrate.analysis.feature.TransationRequiredFeature;
 import com.hsbc.eep.data.migrate.analysis.table.Table;
 
 @Service
@@ -27,7 +27,10 @@ public class OracleAnalyzer {
 
 	public List<DynamicDependency> getDynamicDependencies() {
 		List<DynamicDependency> results = new ArrayList<>();
-//		results.add(new DynamicDependency(Arrays.asList(new Table("A"),new Table("B")),"SELECT","12354"));
+		results.add(new DynamicDependency(Arrays.asList(new Table("EMPLOYEES"),new Table("DEPARTMENTS")),"SELECT","12354"));
+		results.add(new DynamicDependency(Arrays.asList(new Table("EMPLOYEES"),new Table("JOBS")),"SELECT","46451"));
+		results.add(new DynamicDependency(Arrays.asList(new Table("EMPLOYEES"),new Table("JOB_HISTORY")),"SELECT","76665"));
+		results.add(new DynamicDependency(Arrays.asList(new Table("REGIONS"),new Table("COUNTRIES"),new Table("LOCATIONS")),"SELECT","76665"));
 		return results;
 	}
 
@@ -89,21 +92,21 @@ public class OracleAnalyzer {
 		return results;
 	}
 
-	public List<HighReadWriteRatioFeature> getReadWriteFeature() {
-		List<HighReadWriteRatioFeature> results = new ArrayList<>();
-//		results.addAll(Arrays.asList(new HighReadWriteRatioFeature("C",true)));
+	public List<TransationRequiredFeature> getTransationFeature() {
+		List<TransationRequiredFeature> results = new ArrayList<>();
+		results.addAll(Arrays.asList(new TransationRequiredFeature("LOCATIONS",true),new TransationRequiredFeature("EMPLOYEES",true),new TransationRequiredFeature("JOBS",true)));
 		return results;
 	}
 
 	public List<GroupByFeature> getAggregationFeature() {
 		List<GroupByFeature> results = new ArrayList<>();
-//		results.addAll(Arrays.asList(new GroupByFeature("A",true),new GroupByFeature("B",true)));
+		results.addAll(Arrays.asList(new GroupByFeature("EMPLOYEES",true),new GroupByFeature("JOBS",true)));
 		return results;
 	}
 
 	public List<HighIoFeature> getHighIoFeature() {
 		List<HighIoFeature> results = new ArrayList<>();
-//		results.addAll(Arrays.asList(new HighIoFeature("D",true),new HighIoFeature("E",true)));
+		results.addAll(Arrays.asList(new HighIoFeature("EMPLOYEES",true),new HighIoFeature("JOBS",true)));
 		return results;
 	}
 
