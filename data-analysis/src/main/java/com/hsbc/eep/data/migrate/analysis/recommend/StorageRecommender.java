@@ -13,18 +13,18 @@ public class StorageRecommender {
 			String tableName = table.getName();
 			if (table.isTrasactionRequired()) {
 				if(table.isHighIoRequired()&&table.getTableLinkCounts()<5){
-					new Recommendation(tableName, "Spanner");
+					results.add(new Recommendation(tableName, "Spanner"));
 				}else {
-					new Recommendation(tableName, "CloudSQL");
+					results.add(new Recommendation(tableName, "CloudSQL"));
 				}
 			}else {
 				if(table.isAggregationRequired()){
-					new Recommendation(tableName, "Bigquery");
+					results.add(new Recommendation(tableName, "Bigquery"));
 				}else {
 					if(table.isHighIoRequired()&&table.getTableLinkCounts()<2){
-						new Recommendation(tableName, "Bigtable");
+						results.add(new Recommendation(tableName, "Bigtable"));
 					}else {
-						new Recommendation(tableName, "Datastore");
+						results.add(new Recommendation(tableName, "Datastore"));
 					}
 				}
 				

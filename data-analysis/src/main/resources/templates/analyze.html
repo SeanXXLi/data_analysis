@@ -9,11 +9,11 @@
 	<script src="webjars/jquery/1.11.1/jquery.min.js"></script>
 	<script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="webjars/bootstrap/3.3.7-1/css/bootstrap.css">
-	<link th:href="@{connection.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{result.css}" rel="stylesheet" type="text/css">
 </head>
 <body class="text-center">
-<form class="from-db" th:action="@{/connect}" th:object="${conn}" method="post">
- <img class="main-image" src="/images/out.gif" alt="">
+<form class="from-db" th:action="@{/recomm}" th:object="${recommendations}" method="post">
+ <img class="image" src="/images/out.gif" alt="">
  <button class="btn btn-lg btn-primary btn-block" type="submit">Recommend</button>
 </form>
 <script th:inline="javascript">

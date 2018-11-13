@@ -13,7 +13,7 @@
 	<link th:href="@{connection.css}" rel="stylesheet" type="text/css">
 </head>
 <body class="text-center">
-<form class="from-db" th:action="@{/connect}" th:object="${conn}" method="post">
+<form class="from-db" th:action="@{/analyze}" th:object="${conn}" method="post">
  <img class="mb-4" src="/images/3.jpg" alt="" width="72" height="72">
  <h1 class="h3 mb-3 font-weight-noraml" >DB CONNECTION</h1>
  <input type="text" class="form-control" placeholder="Username" required autofocus th:field="*{userName}">
@@ -38,7 +38,7 @@
  	</label>
  </div>
 
- <button class="btn btn-lg btn-primary btn-block" type="submit">Analysis</button>
+ <button class="btn btn-lg btn-primary btn-block" type="submit">Analyze</button>
 </form>
 <script th:inline="javascript">
 	$(function(){

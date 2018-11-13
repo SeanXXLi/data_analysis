@@ -51,8 +51,7 @@ public class OracleAnalyzer {
         });
         for (StaticDependency staticDependency : staticDeps) {
         	if (staticDependency.getRelatedTables().size()>1) {		
-        		System.out.println(staticDeps);
-        		results.addAll(staticDeps);
+        		results.add(staticDependency);
 			}
 		}
 //		results.add(new StaticDependency(Arrays.asList(new Table("A"),new Table("C")),"X_PKG"));
@@ -61,6 +60,15 @@ public class OracleAnalyzer {
 
 	public List<ConstraintDependency> getConstraintDependencies() {
 		List<ConstraintDependency> results = new ArrayList<>();
+		String sql = "select a.table_name as owner, b.table_name as refer, a.constraint_name from DBA_CONSTRAINTS A, DBA_CONSTRAINTS B where A.OWNER='HR' and B.OWNER='HR' and A.CONSTRAINT_TYPE= 'R' and A.R_CONSTRAINT_NAME = B.CONSTRAINT_NAME order by A.TABLE_NAME, B.TABLE_NAME";
+        List<ConstraintDependency> constraintDep = jdbcTemplate.query(sql, new RowMapper(){
+ 
+            public ConstraintDependency mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new ConstraintDependency(Arrays.asList(new Table(rs.getString("OWNER")),new Table(rs.getString("REFER"))),rs.getString("CONSTRAINT_NAME"));
+            }
+ 
+        });
+        results.addAll(constraintDep);
 //		results.add(new ConstraintDependency(Arrays.asList(new Table("C"),new Table("E")),"X_FK"));
 		return results;
 	}

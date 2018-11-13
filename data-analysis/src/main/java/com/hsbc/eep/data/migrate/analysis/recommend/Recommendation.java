@@ -1,5 +1,7 @@
 package com.hsbc.eep.data.migrate.analysis.recommend;
+import lombok.Data;
 
+@Data
 public class Recommendation {
 	private String sourceTable;
 	

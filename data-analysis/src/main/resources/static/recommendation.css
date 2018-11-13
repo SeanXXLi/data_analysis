@@ -1,0 +1,39 @@
+html,
+body{
+	height: 100%
+}
+
+body{
+	display: -ms-flexbox;
+	-ms-flex-align: center;
+	align-items: center;
+	padding-top: 0px;
+	padding-bottom: 40px;
+	background-color: #ffffff;
+	width:100%;
+	magin: auto;
+}
+
+.thumbnail {
+	padding: 0px 5px;
+	height: 100px;
+	line-height: 25px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
+	display: -webkit-box;
+	-webket-box-orient: vertical;
+	-webkit-line-clamp:4;
+}
+	 
+.thumbnail .caption{
+	margin: auto;
+	text-align: center;
+	line-height: 80px;
+}
+	
+.thumbnail .caption .table{
+	margin: auto;
+	text-align: center;
+}
+	 

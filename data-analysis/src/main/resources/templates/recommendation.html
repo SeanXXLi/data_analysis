@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Recommendation</title>
+<meta name="viewport" content="width=device-width">
+<script src="webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="webjars/bootstrap/3.3.7-1/css/bootstrap.css">
+<link th:href="@{recommendation.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div class="container">
+		<h1 class="h1 mb-3 font-weight-normal text-center">RECOMMENDATION</h1>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-align-left" aria-hidden="true">Bigquery
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6 col-md-2" th:each="bigqueryStr:${bigqueryList}">
+						<div class="thumbnail">
+							<div class="caption">
+								<span class="table" th:text="${bigqueryStr}"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-file" aria-hidden="true">Bigtable
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6 col-md-2" th:each="bigtableStr:${bigtableList}">
+						<div class="thumbnail">
+							<div class="caption">
+								<span class="table" th:text="${bigtableStr}"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true">Datastore
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6 col-md-2" th:each="datastoreStr:${datastoreList}">
+						<div class="thumbnail">
+							<div class="caption">
+								<span class="table" th:text="${datastoreStr}"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-wrench" aria-hidden="true">Spanner
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6 col-md-2" th:each="spannerStr:${spannerList}">
+						<div class="thumbnail">
+							<div class="caption">
+								<span class="table" th:text="${spannerStr}"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-cloud-download" aria-hidden="true">CloudSQL
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6 col-md-2" th:each="cloudSQLStr:${cloudSQLList}">
+						<div class="thumbnail">
+							<div class="caption">
+								<span class="table" th:text="${cloudSQLStr}"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+		$(function() {
+			$(":radio").click(function() {
+				var choose = $(this).val();
+				if (choose == 'optionSID') {
+					$('#optionSID').attr("disable", false);
+					$('#optionService').attr("disable", true);
+					$('#optionService').val("");
+				} else {
+					$('#optionSID').attr("disable", true);
+					$('#optionService').attr("disable", false);
+					$('#optionSID').val("");
+				}
+			});
+		})
+	</script>
+</body>
+
+</html>

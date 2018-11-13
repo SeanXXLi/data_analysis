@@ -1,7 +1,10 @@
 package com.hsbc.eep.data.migrate.analysis.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +21,7 @@ import com.hsbc.eep.data.migrate.analysis.dependency.ConstraintDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.DynamicDependency;
 import com.hsbc.eep.data.migrate.analysis.dependency.StaticDependency;
 import com.hsbc.eep.data.migrate.analysis.domian.DBConnection;
+import com.hsbc.eep.data.migrate.analysis.domian.Recommendations;
 import com.hsbc.eep.data.migrate.analysis.feature.GroupByFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighIoFeature;
 import com.hsbc.eep.data.migrate.analysis.feature.HighReadWriteRatioFeature;
@@ -32,6 +36,7 @@ public class WebController {
 	
 	@Autowired 
 	private OracleAnalyzer analyzer;
+	private List<Recommendation> recommendations;
  
 //	@RequestMapping(value = "/",method = RequestMethod.GET)
 //	public String index() {
@@ -44,8 +49,8 @@ public class WebController {
 		return "connection";
 	}
 	
-	@RequestMapping(value = "/connect")
-	public String login(@ModelAttribute DBConnection conn,Model model) {
+	@RequestMapping(value = "/analyze")
+	public String login(@ModelAttribute(value="conn") DBConnection conn,Model model) {
 		model.addAttribute("conn",new DBConnection());
 //		List list = service.getList();
 //		System.out.println(list);
@@ -64,8 +69,38 @@ public class WebController {
 	    new AggregationCollector().collect(aggregationFeatures);
 	    new HighIoCollector().collect(highIoFeatures);
 	    
-	    List<Recommendation> recommends = new StorageRecommender().recommand(allTables);
-		return "result";
+	    recommendations = new StorageRecommender().recommand(allTables);
+	    
+		return "analyze";
+	}
+	
+	@RequestMapping(value = "/recomm",method = {RequestMethod.GET,RequestMethod.POST})
+	public String recommendation(Model model) {
+		List<String> bigqueryList = new ArrayList<>();
+		List<String> bigtableList = new ArrayList<>();
+		List<String> datastoreList = new ArrayList<>();
+		List<String> spannerList = new ArrayList<>();
+		List<String> cloudSQLList = new ArrayList<>();
+		for (Recommendation recommendation : recommendations) {
+			if (StringUtils.equals("Bigquery", recommendation.getTargetStorage())) {
+				bigqueryList.add(recommendation.getSourceTable());
+			}else if(StringUtils.equals("Bigtable", recommendation.getTargetStorage())) {
+				bigtableList.add(recommendation.getSourceTable());
+			}else if(StringUtils.equals("Datastore", recommendation.getTargetStorage())) {
+				datastoreList.add(recommendation.getSourceTable());
+			}else if(StringUtils.equals("Spanner", recommendation.getTargetStorage())) {
+				datastoreList.add(recommendation.getSourceTable());
+			}else if(StringUtils.equals("CloudSQL", recommendation.getTargetStorage())) {
+				cloudSQLList.add(recommendation.getSourceTable());
+			}
+		}
+		
+		model.addAttribute("bigqueryList",bigqueryList);
+		model.addAttribute("bigtableList",bigtableList);
+		model.addAttribute("datastoreList",datastoreList);
+		model.addAttribute("spannerList",spannerList);
+		model.addAttribute("cloudSQLList",cloudSQLList);
+		return "recommendation";
 	}
 	
 }

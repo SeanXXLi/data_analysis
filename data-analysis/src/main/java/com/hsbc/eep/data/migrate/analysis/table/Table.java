@@ -6,13 +6,13 @@ public class Table {
 	
 	private Integer tableLinkCounts = 0;
 	
-	private boolean trasactionRequired;
+	private boolean trasactionRequired = false;
 	
-	private boolean aggregationRequired;
+	private boolean aggregationRequired = false;
 	
-	private boolean highIoRequired;
+	private boolean highIoRequired = false;
 	
-	private String recomandedStorage;
+	private String recomandedStorage = "CloudSQL";
 
 	
 	

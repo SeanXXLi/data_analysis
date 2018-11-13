@@ -15,7 +15,6 @@ body{
 
 .from-db{
 	width: 100%;
-	max-width: 400px;
 	padding: 15px;
 	margin: auto;
 }
@@ -27,9 +26,17 @@ body{
 .from-db.form-contrl{
 	position: relative;
 	box-sizing: border-box;
+	max-width: 400px;
 	height: auto;
 	padding: 2px;
 	font-size: 16px;
+}
+
+.from-db button{
+	width: 100%;
+	padding: 15px;
+	margin: auto;
+	max-width: 400px;
 }
 
 .from-db.form-contrl:focus{
