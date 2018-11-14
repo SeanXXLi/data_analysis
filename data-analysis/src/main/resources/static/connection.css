@@ -29,7 +29,7 @@ body{
 	box-sizing: border-box;
 	height: auto;
 	padding: 2px;
-	font-size: 16px;
+	font-size: 25px;
 }
 
 .from-db.form-control:focus{
@@ -39,6 +39,3 @@ body{
 .from-db input{
 	margin-bottom: 0px;
 }
-
-
-	 
